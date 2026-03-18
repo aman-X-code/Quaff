@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +13,16 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
 
   const handleLinkClick = (e, href) => {
     e.preventDefault();
@@ -29,322 +39,371 @@ export default function Navbar() {
     { label: 'Menu', href: '#menu' },
     { label: 'Gallery', href: '#gallery' },
     { label: 'Events', href: '#events' },
+    { label: 'Contact', href: '#contact' },
   ];
 
   return (
     <>
-      <div className="header-wrapper">
-        <div className="header-container">
-          {/* Logo */}
-          <a href="#hero" className="logo-area" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-            <img src="/logo2.png" alt="QUAFF Brewing" className="logo-img" />
-          </a>
+      {/* Floating Hamburger Button */}
+      <button
+        className={`hamburger-btn ${menuOpen ? 'active' : ''} ${scrolled ? 'scrolled' : ''}`}
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label="Toggle menu"
+      >
+        <div className="hamburger-icon">
+          <span className="hamburger-line line-1" />
+          <span className="hamburger-line line-2" />
+          <span className="hamburger-line line-3" />
+        </div>
+      </button>
 
-          {/* Center Nav Links */}
-          <ul className="nav-bar">
-            {links.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="nav-bar-link"
-                  onClick={(e) => handleLinkClick(e, link.href)}
-                >
-                  {link.label}
-                </a>
-              </li>
+      {/* Floating Logo */}
+      <a
+        href="#hero"
+        className={`floating-logo ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}
+        onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+      >
+        <img src="/logo2.png" alt="QUAFF Brewing" className="floating-logo-img" />
+      </a>
+
+      {/* Fullscreen Menu Overlay */}
+      <div className={`menu-overlay ${menuOpen ? 'open' : ''}`}>
+        {/* Decorative background elements */}
+        <div className="menu-bg-grain" />
+        <div className="menu-bg-glow" />
+
+        <nav className="menu-content">
+          <div className="menu-links">
+            {links.map((link, index) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="menu-link"
+                onClick={(e) => handleLinkClick(e, link.href)}
+                style={{ transitionDelay: menuOpen ? `${0.08 + index * 0.05}s` : '0s' }}
+              >
+                <span className="menu-link-number">0{index + 1}</span>
+                <span className="menu-link-label">{link.label}</span>
+                <span className="menu-link-line" />
+              </a>
             ))}
-          </ul>
-
-          {/* Right Action Buttons */}
-          <div className="nav-bar-actions">
-            <button
-              className="nav-bar-button"
-              onClick={(e) => handleLinkClick(e, '#contact')}
-            >
-              Contact
-            </button>
-            <button
-              className="nav-bar-button-primary"
-              onClick={(e) => handleLinkClick(e, '#contact')}
-            >
-              Reserve
-            </button>
           </div>
 
-          {/* Mobile Hamburger */}
-          <button
-            className={`hamburger ${menuOpen ? 'active' : ''}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
-          >
-            <span className="hamburger-line" style={{ transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
-            <span className="hamburger-line" style={{ opacity: menuOpen ? 0 : 1 }} />
-            <span className="hamburger-line" style={{ transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
-          </button>
-        </div>
-      </div>
+          <div className="menu-footer" style={{ transitionDelay: menuOpen ? '0.5s' : '0s' }}>
 
-      {/* Mobile Menu Overlay */}
-      <div className={`mobile-overlay ${menuOpen ? 'open' : ''}`}>
-        <div className="mobile-overlay-content">
-          {links.map((link, index) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="mobile-link"
-              onClick={(e) => handleLinkClick(e, link.href)}
-              style={{ animationDelay: `${index * 0.05}s` }}
-            >
-              {link.label}
-            </a>
-          ))}
-          <button
-            className="mobile-reserve-btn"
-            onClick={(e) => handleLinkClick(e, '#contact')}
-          >
-            Reserve Table
-          </button>
-        </div>
+            <div className="menu-social-links">
+              <a href="#" className="social-link">Instagram</a>
+              <a href="#" className="social-link">Facebook</a>
+              <a href="#" className="social-link">Twitter</a>
+            </div>
+          </div>
+        </nav>
       </div>
 
       <style jsx>{`
-        /* ── GLASSMORPHISM HEADER ── */
-        .header-wrapper {
+        /* ── Floating Hamburger Button ── */
+        .hamburger-btn {
           position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 1000;
+          top: 28px;
+          right: 28px;
+          z-index: 1100;
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(30, 30, 30, 0.6);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          cursor: pointer;
           display: flex;
+          align-items: center;
           justify-content: center;
-          padding-top: 24px;
-          pointer-events: none;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
         }
 
-        .header-container {
-          width: min(860px, 85%);
-          height: 52px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 20px;
-          border-radius: 50px;
-          pointer-events: auto;
-
-          /* Glassmorphism */
-          background: linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.12) 0%,
-            rgba(255, 255, 255, 0.05) 100%
-          );
-          background-color: rgba(60, 60, 60, 0.45);
-          backdrop-filter: blur(28px) saturate(1.4);
-          -webkit-backdrop-filter: blur(28px) saturate(1.4);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          border-top: 1px solid rgba(255, 255, 255, 0.25);
-          box-shadow:
-            0 8px 32px rgba(0, 0, 0, 0.35),
-            inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        }
-
-        /* ── Logo ── */
-        .logo-area {
-          display: flex;
-          align-items: center;
-          flex-shrink: 0;
-        }
-
-        .logo-img {
-          height: 28px;
-          width: auto;
-          object-fit: contain;
-          transition: transform 0.3s ease;
-        }
-
-        .logo-area:hover .logo-img {
+        .hamburger-btn:hover {
+          background: rgba(50, 50, 50, 0.75);
+          border-color: rgba(255, 255, 255, 0.2);
           transform: scale(1.05);
+          box-shadow: 0 6px 32px rgba(0, 0, 0, 0.4);
         }
 
-        /* ── Nav Links ── */
-        .nav-bar {
+        .hamburger-btn.active {
+          background: transparent;
+          border-color: rgba(255, 255, 255, 0.15);
+          box-shadow: none;
+          backdrop-filter: none;
+          -webkit-backdrop-filter: none;
+        }
+
+        .hamburger-btn.scrolled:not(.active) {
+          background: rgba(20, 20, 20, 0.85);
+          border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .hamburger-icon {
+          width: 22px;
+          height: 16px;
           display: flex;
-          align-items: center;
-          gap: 4px;
-          list-style: none;
-          margin: 0;
-          padding: 0;
-        }
-
-        .nav-bar-link {
-          color: #fff;
-          font-family: var(--font-body);
-          font-size: 15px;
-          font-weight: 500;
-          letter-spacing: 0.5px;
-          text-decoration: none;
-          padding: 4px 12px;
-          border-radius: 20px;
-          transition: all 0.3s ease;
-          position: relative;
-        }
-
-        .nav-bar-link:hover {
-          color: #D3B89A;
-          background: rgba(255, 255, 255, 0.06);
-        }
-
-        .nav-bar-link:active {
-          color: #D3B89A;
-        }
-
-        /* ── Action Buttons ── */
-        .nav-bar-actions {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          flex-shrink: 0;
-        }
-
-        .nav-bar-button {
-          padding: 7px 18px;
-          border-radius: 50px;
-          background-color: rgba(215, 215, 215, 0.12);
-          border: 0.5px solid rgba(255, 255, 255, 0.2);
-          color: #fff;
-          font-family: var(--font-body);
-          font-size: 14px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .nav-bar-button:hover {
-          background-color: rgba(215, 215, 215, 0.25);
-          border-color: rgba(255, 255, 255, 0.35);
-        }
-
-        .nav-bar-button-primary {
-          padding: 7px 22px;
-          border-radius: 50px;
-          background-color: #8C9B81;
-          border: none;
-          color: #111;
-          font-family: var(--font-body);
-          font-size: 14px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .nav-bar-button-primary:hover {
-          background-color: #A0B294;
-          transform: translateY(-1px);
-          box-shadow: 0 4px 16px rgba(140, 155, 129, 0.35);
-        }
-
-        /* ── Hamburger (Mobile) ── */
-        .hamburger {
-          display: none;
           flex-direction: column;
-          gap: 5px;
-          padding: 8px;
-          background: none;
-          border: none;
-          cursor: pointer;
-          z-index: 50;
+          justify-content: space-between;
+          align-items: center;
         }
 
         .hamburger-line {
           display: block;
-          width: 22px;
+          width: 100%;
           height: 2px;
           background: #fff;
-          transition: all 0.3s ease;
           border-radius: 2px;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          transform-origin: center;
         }
 
-        /* ── Mobile Overlay ── */
-        .mobile-overlay {
+        .hamburger-btn.active .line-1 {
+          transform: translateY(7px) rotate(45deg);
+        }
+
+        .hamburger-btn.active .line-2 {
+          opacity: 0;
+          transform: scaleX(0);
+        }
+
+        .hamburger-btn.active .line-3 {
+          transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* ── Floating Logo ── */
+        .floating-logo {
+          position: fixed;
+          top: 32px;
+          left: 32px;
+          z-index: 1100;
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          opacity: 1;
+        }
+
+        .floating-logo.scrolled {
+          opacity: 0.9;
+        }
+
+        .floating-logo-img {
+          height: 32px;
+          width: auto;
+          object-fit: contain;
+          transition: all 0.3s ease;
+          filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+        }
+
+        .floating-logo:hover .floating-logo-img {
+          transform: scale(1.08);
+          filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
+        }
+
+        .floating-logo.menu-open .floating-logo-img {
+          filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        /* ── Fullscreen Overlay ── */
+        .menu-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(10, 10, 10, 0.96);
-          backdrop-filter: blur(24px);
-          -webkit-backdrop-filter: blur(24px);
-          z-index: 999;
+          z-index: 1050;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .menu-overlay.open {
+          opacity: 1;
+          visibility: visible;
+        }
+
+        /* Background layers */
+        .menu-bg-grain {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            160deg,
+            rgb(10, 10, 10) 0%,
+            rgb(20, 18, 15) 40%,
+            rgb(15, 12, 10) 100%
+          );
+          transition: opacity 0.5s ease;
+        }
+
+        .menu-bg-glow {
+          position: absolute;
+          top: -20%;
+          right: -10%;
+          width: 60%;
+          height: 60%;
+          background: radial-gradient(
+            circle,
+            rgba(211, 184, 154, 0.06) 0%,
+            transparent 70%
+          );
+          filter: blur(80px);
+          pointer-events: none;
+        }
+
+        /* ── Menu Content ── */
+        .menu-content {
+          position: relative;
+          z-index: 2;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
+          gap: 3rem;
+          width: 100%;
+          max-width: 600px;
+          padding: 2rem;
+        }
+
+        .menu-links {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+          width: 100%;
+        }
+
+        .menu-link {
+          display: flex;
+          align-items: center;
+          gap: 1.2rem;
+          padding: 1.1rem 0;
+          text-decoration: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
           opacity: 0;
-          pointer-events: none;
-          transition: opacity 0.4s ease;
+          transform: translateY(24px);
+          transition: opacity 0.45s ease, transform 0.45s ease, color 0.3s ease;
+          cursor: pointer;
+          position: relative;
         }
 
-        .mobile-overlay.open {
+        .menu-overlay.open .menu-link {
           opacity: 1;
-          pointer-events: auto;
+          transform: translateY(0);
         }
 
-        .mobile-overlay-content {
+        .menu-link:hover .menu-link-label {
+          color: #D3B89A;
+          letter-spacing: 0.08em;
+        }
+
+        .menu-link:hover .menu-link-number {
+          color: #D3B89A;
+        }
+
+        .menu-link:hover .menu-link-line {
+          transform: scaleX(1);
+          background: #D3B89A;
+        }
+
+        .menu-link-number {
+          font-family: var(--font-body);
+          font-size: 0.75rem;
+          font-weight: 400;
+          color: rgba(255, 255, 255, 0.25);
+          letter-spacing: 0.1em;
+          min-width: 28px;
+          transition: color 0.3s ease;
+        }
+
+        .menu-link-label {
+          font-family: var(--font-display, var(--font-body));
+          font-size: clamp(1.8rem, 4vw, 2.8rem);
+          font-weight: 300;
+          color: rgba(255, 255, 255, 0.88);
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          transition: all 0.3s ease;
+        }
+
+        .menu-link-line {
+          flex: 1;
+          height: 1px;
+          background: rgba(255, 255, 255, 0.15);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: all 0.4s ease;
+        }
+
+        /* ── Menu Footer ── */
+        .menu-footer {
           display: flex;
           flex-direction: column;
           align-items: center;
           gap: 2rem;
+          margin-top: 1rem;
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity 0.45s ease, transform 0.45s ease;
         }
 
-        .mobile-link {
-          color: rgba(255, 255, 255, 0.85);
+        .menu-overlay.open .menu-footer {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+
+
+        .menu-social-links {
+          display: flex;
+          gap: 2rem;
+        }
+
+        .social-link {
+          color: rgba(255, 255, 255, 0.35);
           font-family: var(--font-body);
-          font-size: 1.5rem;
-          font-weight: 300;
-          letter-spacing: 0.15em;
+          font-size: 0.75rem;
+          font-weight: 400;
+          letter-spacing: 0.1em;
           text-decoration: none;
+          text-transform: uppercase;
           transition: color 0.3s ease;
         }
 
-        .mobile-link:hover {
+        .social-link:hover {
           color: #D3B89A;
-        }
-
-        .mobile-reserve-btn {
-          margin-top: 1.5rem;
-          padding: 14px 36px;
-          border-radius: 50px;
-          background: transparent;
-          border: 1.5px solid #D3B89A;
-          color: #D3B89A;
-          font-family: var(--font-body);
-          font-size: 14px;
-          font-weight: 600;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .mobile-reserve-btn:hover {
-          background: #D3B89A;
-          color: #111;
         }
 
         /* ── Responsive ── */
-        @media (max-width: 900px) {
-          .nav-bar {
-            display: none;
+        @media (max-width: 768px) {
+          .hamburger-btn {
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
           }
 
-          .nav-bar-actions {
-            display: none;
+          .floating-logo {
+            top: 24px;
+            left: 20px;
           }
 
-          .hamburger {
-            display: flex;
+          .floating-logo-img {
+            height: 26px;
           }
 
-          .header-container {
-            width: 92%;
-            height: 58px;
-            padding: 0 20px;
+          .menu-link-label {
+            font-size: clamp(1.4rem, 6vw, 2rem);
+          }
+
+          .menu-content {
+            padding: 1.5rem;
+          }
+
+          .menu-link {
+            padding: 0.9rem 0;
           }
         }
       `}</style>
