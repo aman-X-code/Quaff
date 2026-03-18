@@ -6,7 +6,7 @@ export default function About() {
       <div className="section-inner">
         <div className="about-grid">
           <div className="about-image-wrapper reveal-left">
-            <img src="https://res.cloudinary.com/dave3np5n/image/upload/v1773117278/IMG_1017_kkr6vy.jpg" alt="Quaff Brewing Co. craft beers" />
+            <img src="/about-brews.jpg" alt="Quaff Brewing Co. craft beers" />
           </div>
 
           <div className="about-content">

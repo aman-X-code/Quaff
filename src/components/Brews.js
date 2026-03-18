@@ -22,6 +22,13 @@ const brews = [
     abv: '4.9% ABV',
     image: 'https://res.cloudinary.com/dave3np5n/image/upload/v1773117281/IMG_1020_o4rogp.jpg',
   },
+  {
+    name: 'Amber Sunset Ale',
+    style: 'Amber Ale',
+    desc: 'Smooth and balanced with caramel malt sweetness and a subtle hop finish. A crowd favorite.',
+    abv: '5.5% ABV',
+    image: 'https://res.cloudinary.com/dave3np5n/image/upload/v1773117245/IMG_0961_hwijga.jpg',
+  },
 ];
 
 export default function Brews() {
