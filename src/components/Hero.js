@@ -2,7 +2,7 @@
 
 export default function Hero() {
   return (
-    <section className="hero-section wrapper hidden-overflow" id="hero">
+    <section className="hero-section" id="hero">
       <div className="hero-container">
         {/* The large curved background, styled in a warm beer tone */}
         <div className="hero-curved-bg">
@@ -40,6 +40,7 @@ export default function Hero() {
           justify-content: center;
           align-items: center;
           width: 100%;
+          scroll-snap-align: start;
         }
 
         .hero-container {

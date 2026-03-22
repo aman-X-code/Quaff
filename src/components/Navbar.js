@@ -192,11 +192,10 @@ export default function Navbar() {
         }
 
         .floating-logo-img {
-          height: 32px;
+          height: 48px;
           width: auto;
           object-fit: contain;
           transition: all 0.3s ease;
-          filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
         }
 
         .floating-logo:hover .floating-logo-img {

@@ -79,6 +79,7 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  scroll-snap-type: y mandatory;
 }
 
 body {
@@ -175,6 +176,7 @@ h6 {
 .section {
   padding: var(--space-3xl) var(--space-lg);
   position: relative;
+  scroll-snap-align: start;
 }
 
 .section-inner {
@@ -1874,6 +1876,7 @@ h6 {
   background: var(--black);
   padding: var(--space-3xl) var(--space-lg) var(--space-lg);
   position: relative;
+  scroll-snap-align: start;
 }
 
 .footer::before {
