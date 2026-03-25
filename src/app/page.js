@@ -7,6 +7,7 @@ import Hero from '../components/Hero';
 import About from '../components/About';
 import QuoteSection from '../components/QuoteSection';
 import Brews from '../components/Brews';
+import BurpText from '../components/BurpText';
 import FoodMenu from '../components/FoodMenu';
 import Gallery from '../components/Gallery';
 import Testimonials from '../components/Testimonials';
@@ -24,6 +25,7 @@ export default function Home() {
       <QuoteSection />
       <main>
         <Brews />
+        <BurpText />
         <FoodMenu />
         <Gallery />
         <Testimonials />
