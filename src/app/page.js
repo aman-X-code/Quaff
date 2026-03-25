@@ -18,7 +18,14 @@ export default function Home() {
   useScrollAnimation();
 
   useEffect(() => {
+    // Disable browser scroll restoration so it doesn't fight us
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    // Small delay ensures mobile browsers don't override after paint
     window.scrollTo(0, 0);
+    const t = setTimeout(() => window.scrollTo(0, 0), 100);
+    return () => clearTimeout(t);
   }, []);
 
   return (
