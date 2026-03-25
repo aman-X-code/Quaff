@@ -1,6 +1,7 @@
 'use client';
 
 import useScrollAnimation from '../hooks/useScrollAnimation';
+import { useEffect } from 'react';
 import Loader from '../components/Loader';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
@@ -15,6 +16,10 @@ import Footer from '../components/Footer';
 
 export default function Home() {
   useScrollAnimation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <>
