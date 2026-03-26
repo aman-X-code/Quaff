@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import Loader from '../components/Loader';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
+import Awards from '../components/Awards';
 import About from '../components/About';
 import QuoteSection from '../components/QuoteSection';
 import Brews from '../components/Brews';
@@ -18,11 +19,9 @@ export default function Home() {
   useScrollAnimation();
 
   useEffect(() => {
-    // Disable browser scroll restoration so it doesn't fight us
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
-    // Small delay ensures mobile browsers don't override after paint
     window.scrollTo(0, 0);
     const t = setTimeout(() => window.scrollTo(0, 0), 100);
     return () => clearTimeout(t);
@@ -33,6 +32,7 @@ export default function Home() {
       <Loader />
       <Navbar />
       <Hero />
+      <Awards />
       <About />
       <QuoteSection />
       <main>

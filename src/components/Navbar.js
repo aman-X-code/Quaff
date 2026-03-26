@@ -63,7 +63,7 @@ export default function Navbar() {
         className={`floating-logo ${scrolled ? 'scrolled' : ''} ${menuOpen ? 'menu-open' : ''}`}
         onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
       >
-        <img src="/logo2.png" alt="QUAFF Brewing" className="floating-logo-img" />
+        <img src="/logo-quaff.png" alt="QUAFF Brewing Co." className="floating-logo-img" />
       </a>
 
       {/* Fullscreen Menu Overlay */}
@@ -192,7 +192,7 @@ export default function Navbar() {
         }
 
         .floating-logo-img {
-          height: 48px;
+          height: 62px;
           width: auto;
           object-fit: contain;
           transition: all 0.3s ease;
@@ -390,7 +390,7 @@ export default function Navbar() {
           }
 
           .floating-logo-img {
-            height: 26px;
+            height: 34px;
           }
 
           .menu-link-label {

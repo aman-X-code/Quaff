@@ -5,7 +5,13 @@ export default function Footer() {
     <footer className="footer" id="contact">
       <div className="footer-grid">
         <div className="footer-brand reveal">
-          <h3><span>QUAFF</span> Brewing Co.</h3>
+          <img src="/logo2.png" alt="Quaff Brewing Co." style={{
+            height: '72px',
+            width: 'auto',
+            objectFit: 'contain',
+            marginBottom: '1.2rem',
+            display: 'block',
+          }} />
           <p>
             Gurgaon&apos;s finest brewpub, with locations in DLF Cyber Hub and Eros City Square. 
             Where handcrafted brews meet gourmet cuisine and unforgettable nights.
